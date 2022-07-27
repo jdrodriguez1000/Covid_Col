@@ -10,5 +10,4 @@ covid_original <- read_csv(ruta_archivo)
 
 # Carga del set original con los datos de distribucion de vacunas contra el covid 19 en Colombia
 ruta_archivo1 <- file.choose()
-dist_vacunas_original <- read_csv(ruta_archivo1) 
-
+dist_vacunas_original <- read_csv(ruta_archivo1)
