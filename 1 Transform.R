@@ -40,5 +40,402 @@ covid_transformado <- covid_original %>%
   mutate(diasem = wday(fnotif, label = TRUE))
   
 
+###  ------  ANALISIS INICIAL DE LA COLUMNA FECHA REPORTE -----------
 
+# Totales por fecha
+covid_transformado %>% 
+  summarise(total = sum(!is.na(frepor))) %>% 
+  View()
+
+# Fecha maxima y minima
+covid_transformado %>% 
+  summarise(fecha_min = min(frepor),
+            fecha_max = max(frepor)) %>% 
+  View()
+
+# fechas faltantes
+covid_transformado %>% 
+  group_by(frepor) %>% 
+  summarise(total = sum(is.na(frepor))) %>% 
+  arrange(frepor) %>% 
+  View()
+
+## ------ ANALISIS INICIAL COLUMNA IDCASO ----------
+
+# Total ID casos
+covid_transformado %>% 
+  summarise(total = sum(!is.na(idcaso))) %>% 
+  View()
+
+# Id minimo - Id maximo
+covid_transformado %>% 
+  summarise(id_minimo = min(idcaso),
+            id_maximo = max(idcaso)) %>% 
+  View()
+
+
+
+## ------ ANALISIS INICIAL COLUMNA FECHA DE NOTIFICACION -----
+
+# Totales por fecha
+covid_transformado %>% 
+  summarise(total = sum(!is.na(fnotif))) %>% 
+  View()
+
+# Fecha minima y maxima de notificacion
+covid_transformado %>% 
+  summarise(fecha_minima = min(fnotif),
+            fecha_maxima = max(fnotif)) %>% 
+  View()
+
+
+## ------ ANALISIS DE LAS COLUMNAS CODIGO Y NOMBRE DEPARTAMENTO ------
+
+# Totales por codigo departamento
+covid_transformado %>% 
+  summarise(total = sum(!is.na(coddpto))) %>% 
+  View()
+
+# Totales por nombre departamento
+covid_transformado %>% 
+  summarise(total = sum(!is.na(nomdpto))) %>% 
+  View()
+
+# Nombres de departamentos repetidos - Codigos no correctos
+covid_transformado %>% 
+  group_by(coddpto, nomdpto) %>% 
+  summarise(total = sum(!is.na(nomdpto))) %>% 
+  arrange(nomdpto) %>% 
+  View()
+
+# Se debe actualizar el nombre de los departamentos Caldas, Cartagena, Cundinamarca,
+# Santander, Santa Marta DE, Tolima, Barranquilla
+
+# Transformacion de nombres de departamentos
+covid_transformado <- covid_transformado %>% 
+  mutate(nomdpto = ifelse(nomdpto == "Caldas", "CALDAS", nomdpto)) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "CARTAGENA", "BOLIVAR", nomdpto)) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "Cundinamarca", "CUNDINAMARCA", nomdpto)) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "Santander", "SANTANDER", nomdpto)) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "STA MARTA D.E.", "MAGDALENA", nomdpto)) %>%
+  mutate(nomdpto = ifelse(nomdpto == "Tolima", "TOLIMA", nomdpto)) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "BARRANQUILLA", "ATLANTICO", nomdpto))
+
+
+## Se debe actualizar los siguientes codigos de departamentos: Atlantico, Bolivar, Magdalena
+covid_transformado <- covid_transformado %>% 
+  mutate(coddpto = ifelse(coddpto == 8001, 8, coddpto)) %>% 
+  mutate(coddpto = ifelse(coddpto == 13001, 13, coddpto)) %>%
+  mutate(coddpto = ifelse(coddpto == 47001, 47, coddpto))
+
+
+## ------ ANALISIS DE LAS COLUMNAS CODIGO Y NOMBRE DE MUNICIPIOS -------
+
+# Total registros por codigo de municipio
+covid_transformado %>% 
+  summarise(total = sum(!is.na(codmpio))) %>% 
+  View()
+
+# Total registro por nombre de municipio
+covid_transformado %>% 
+  summarise(total = sum(!is.na(nommpio))) %>% 
+  View()
+
+# nombres de municipios repetidos o incorrectos - codigos de municipios no correctos
+covid_transformado %>% 
+  group_by(codmpio, nommpio, nomdpto) %>% 
+  summa rise(total = sum(!is.na(nommpio))) %>% 
+  arrange(nommpio) %>% 
+  View()
+
+# Se debe actualizar el nombre de Anserma, Barrancabermeja, Entrerrios, Gachala, Galapa,
+# Gameza, Guepsa, Medellin, Momil, Pensilvania, Puerto Colombia, Somondoco
+
+# Actualizacion de nombres de municipios
+covid_transformado <- covid_transformado %>% 
+  mutate(nommpio = ifelse(nommpio == "Anserma", "ANSERMA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "barrancabermeja", "BARRANCABERMEJA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "ENTRERrIOS", "ENTRERRIOS", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "gachala", "GACHALA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "Galapa", "GALAPA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "Gameza", "GAMEZA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "Guepsa", "GUEPSA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "Medellin", "MEDELLIN", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "MEDELLiN", "MEDELLIN", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "momil", "MOMIL", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "Pensilvania", "PENSILVANIA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "puerto colombia", "PUERTO COLOMBIA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "puerto COLOMBIA", "PUERTO COLOMBIA", nommpio)) %>% 
+  mutate(nommpio = ifelse(nommpio == "Somondoco", "SOMONDOCO", nommpio))
+
+
+## ----- ANALISIS INICIAL DE LA COLUMNA EDAD --------
+
+# Total registros con la informacion de la edad
+covid_transformado %>% 
+  summarise(total = sum(!is.na(edad))) %>% 
+  View()
+
+
+# Edad minima y maxima registrada
+covid_transformado %>% 
+  summarise(edad_minima = min(edad),
+            edad_maxima = max(edad)) %>% 
+  View()
+
+## ----- ANALISIS INICIAL DE LA COLUMNA UNIDAD DE MEDIDAD DE EDAD mededad ------
+
+# Total registros con informacion
+covid_transformado %>% 
+  summarise(total = sum(!is.na(mededad))) %>% 
+  View()
+
+# Total registros por unidad de medida de edad 
+covid_transformado %>% 
+  group_by(mededad) %>% 
+  summarise(total = sum(!is.na(mededad))) %>% 
+  View()
+
+
+## ------ ANALISIS INICIAL DE LA COLUMNA SEXO ----------
+
+# Total registros con informacion de edad
+covid_transformado %>% 
+  summarise(total = sum(!is.na(sexo))) %>% 
+  View()
+
+# Total registros por edad
+covid_transformado %>% 
+  group_by(sexo) %>% 
+  summarise(total = sum(!is.na(sexo))) %>% 
+  View()
+
+# Se debe transformar la variable sexo f a F y m a M.
+covid_transformado <- covid_transformado %>% 
+  mutate(sexo = ifelse(sexo == "f", "F", sexo)) %>% 
+  mutate(sexo = ifelse(sexo == "m", "M", sexo))
+
+
+## ----- ANALISIS DE LA COLUMNA TIPO DE CONTAGIO tipo -----
+
+# Total registros en la variable tipo de contagio
+covid_transformado %>% 
+  summarise(total = sum(!is.na(tipo))) %>% 
+  View()
+
+
+# Informacion almacenada en la variable tipo de contagio
+covid_transformado %>% 
+  group_by(tipo) %>% 
+  summarise(total = sum(!is.na(tipo))) %>% 
+  View()
+
+## ------ ANALISIS INICIAL DE LA COLUMNA UBICACION DEL CASO - ubicacion ------
+
+# Total registros en la variable ubicacion
+covid_transformado %>% 
+  summarise(total = sum(!is.na(ubicacion))) %>% 
+  View()
+
+# Informacion registrada en la variable ubicacion
+covid_transformado %>% 
+  group_by(ubicacion) %>% 
+  summarise(total = sum(!is.na(ubicacion))) %>% 
+  View()
+
+# Analisis de la variable ubicacion cuando es N/A
+covid_transformado %>% 
+  filter(ubicacion == "N/A") %>% 
+  View()
+
+# Se debe realiza las siguientes transformacion: casa y CASA por Casa,  Fallecido por Cementerio y 
+# validar aquellos que ya tiene fecha de muerte realizando el cambio de ubicacion a Cementerio
+covid_transformado <- covid_transformado %>% 
+  mutate(ubicacion = ifelse(ubicacion == "casa", "Casa", ubicacion)) %>% 
+  mutate(ubicacion = ifelse(ubicacion == "CASA", "Casa", ubicacion)) %>% 
+  mutate(ubicacion = ifelse(ubicacion == "Fallecido", "Cementerio", ubicacion)) %>% 
+  mutate(ubicacion = ifelse(!is.na(fmuerte), "Cementerio", ubicacion))
+
+
+## ----- ANALISIS INICIAL DE LA VARIABLE ESTADO - nivel --------
+
+# Cambiar el nombre de la columna estado a nivel
+covid_transformado <-  covid_transformado %>% 
+  rename(nivel = "estado")
+
+# Total registros informados
+covid_transformado %>% 
+  summarise(total = sum(!is.na(nivel))) %>% 
+  View()
+
+# Informacion almacenada en la variable estado
+covid_transformado %>% 
+  group_by(nivel) %>% 
+  summarise(total = sum(!is.na(nivel))) %>% 
+  View()
+
+
+# Se debe actualizar leve y LEVE  a leve.
+covid_transformado <- covid_transformado %>% 
+  mutate(nivel = ifelse(nivel == "leve", "Leve", nivel)) %>% 
+  mutate(nivel = ifelse(nivel == "LEVE", "Leve", nivel))
+
+# Analisis de los N/A
+covid_transformado %>% 
+  filter(nivel == "N/A") %>% 
+  View()
+
+# Transformar los N/A en nivel a Fallecido cuando la ubicacion es cementerio.
+covid_transformado <- covid_transformado %>% 
+  mutate(nivel = ifelse(ubicacion == "Cementerio", "Fallecido", nivel))
+  
+  
+## ------- ANALISIS INICIAL DE LA VARIABLE CODIGO Y NOMBRE PAIS --------
+
+# Total registros con informacion
+covid_transformado %>% 
+  summarise(total = sum(!is.na(codpais))) %>% 
+  View()
+
+# Total registros sin informacion
+covid_transformado %>% 
+  summarise(total = sum(is.na(codpais))) %>% 
+  View()
+
+# Se debe actualizar el codigo de pais a 170 y el nombre del pais a Colombia.
+covid_transformado <- covid_transformado %>% 
+  mutate(codpais = 170) %>% 
+  mutate(nompais = "COLOMBIA")
+
+## ------- ANALISIS INICIAL DE LA VARIABLE RECUPERADO - estado ------
+
+# Actualizar el nombre de la variable recuperado a estado
+covid_transformado <- covid_transformado %>% 
+  rename(estado = "recuperado")
+
+# Total registros en la variable estado
+covid_transformado %>% 
+  summarise(total = sum(!is.na(estado))) %>% 
+  View()
+
+# Informacion almacenada en la variable recuperado
+covid_transformado %>% 
+  group_by(estado) %>% 
+  summarise(total = sum(!is.na(estado))) %>% 
+  View()
+
+# Se debe actualizar fallecido a Fallecido y actualizar los N/A a Fallecido siempre y cuando el nivel sea Fallecido
+covid_transformado <- covid_transformado %>% 
+  mutate(estado = ifelse(estado == "fallecido", "Fallecido", estado)) %>% 
+  mutate(estado = ifelse(nivel == "Fallecido", "Fallecido", estado))
+
+
+## -------- ANALISIS INICIAL DE LA VARIABLE FECHA DE SINTOMAS -----
+
+# Total registros informados
+covid_transformado %>% 
+  summarise(total = sum(is.na(fsintomas))) %>% 
+  View()
+
+# analisis de la fecha de sintomas cuando tiene datos faltantes
+covid_transformado %>% 
+  filter(is.na(fsintomas)) %>% 
+  View()
+
+
+## ----- ANALISIS INICIAL DE LA VARIABLE FECHA DE MUERTE ------
+
+# total registros informados
+covid_transformado %>% 
+  summarise(total = sum(!is.na(fmuerte))) %>% 
+  View()
+
+
+## ------- ANALISIS INICIAL DE LA VARIABLE FECHA DE DIAGNOSTICO -------
+
+# Total registros informados en la fecha de diagnostico
+covid_transformado %>% 
+  summarise(total = sum(!is.na(fdiagnos))) %>% 
+  View()
+
+# Total registros sin informacion de fecha de diagnostico
+covid_transformado %>% 
+  summarise(total = sum(is.na(fdiagnos))) %>% 
+  View()
+
+
+## ------- ANALISIS INICIAL DE LA FECHA DE RECUPERACION -------
+
+# Total registros informados en la fecha de recuperacion
+covid_transformado %>% 
+  summarise(total = sum(!is.na(frecuper))) %>% 
+  View()
+
+# Total registros sin informacion en la fecha de recuperacion
+covid_transformado %>% 
+  summarise(total = sum(is.na(frecuper))) %>% 
+  View()
+
+
+## ------ ANALISIS INICIAL DE LA VARIABLE TIPO DE RECUPERACION -----
+
+# Total registros informados 
+covid_transformado %>% 
+  summarise(total = sum(!is.na(tiprecup))) %>% 
+  View()
+
+
+# Total registros sin informacion en el tipo de recuperacion
+covid_transformado %>% 
+  summarise(total = sum(is.na(tiprecup))) %>% 
+  View()
+
+# Informacion almacenada en la variable tipo de recuperacion
+covid_transformado %>% 
+  group_by(tiprecup) %>% 
+  summarise(total = sum(!is.na(tiprecup))) %>% 
+  View()
+
+
+
+## ------- ANALISIS INICIAL DE LA VARIABLE PERTENENCIA ETNICA - codetnia -------
+
+# Total registros informados 
+covid_transformado %>% 
+  summarise(total = sum(!is.na(codetnia))) %>% 
+  View()
+
+# Total registros sin informacion
+covid_transformado %>% 
+  summarise(total = sum(is.na(codetnia))) %>% 
+  View()
+
+# Informacion almacenda en pertencia etnica 
+covid_transformado %>% 
+  group_by(codetnia) %>% 
+  summarise(total = sum(!is.na(codetnia))) %>% 
+  View()
+
+
+## ------ ANALISIS INICIAL DE LA VARIABLE NOMBRE DEL GRUPO ETNICO - grupetnia --------
+
+# Total registros informados
+covid_transformado %>% 
+  summarise(total = sum(!is.na(grupetnia))) %>% 
+  View()
+
+# Total registros sin informacion
+covid_transformado %>% 
+  summarise(total = sum(is.na(grupetnia))) %>% 
+  View()
+
+# Informacion almacenado en la variable grupetnia
+covid_transformado %>% 
+  group_by(grupetnia) %>% 
+  summarise(total = sum(is.na(grupetnia))) %>% 
+  View()
+
+
+## COMANDOS PARA CONOCER LOS NOMBRES Y EL TIPO DE LAS COLUMNAS
 glimpse(covid_transformado)
+glimpse(covid_original)
