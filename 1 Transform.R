@@ -5,7 +5,10 @@ library(ggplot2)
 library(readr)
 
 
-###  --------- TRANSFORMACON DEL ARCHIVO COVID ORIGINGAL ----------
+###  ---------                                           ---------------
+###  --------- TRANSFORMACON DEL ARCHIVO COVID ORIGINGAL ---------------
+###  ---------                                           ---------------
+
 
 # Crecacion del archivo transformado 
 covid_transformado <- covid_original %>% 
@@ -144,7 +147,7 @@ covid_transformado %>%
 # nombres de municipios repetidos o incorrectos - codigos de municipios no correctos
 covid_transformado %>% 
   group_by(codmpio, nommpio, nomdpto) %>% 
-  summa rise(total = sum(!is.na(nommpio))) %>% 
+  summarise(total = sum(!is.na(nommpio))) %>% 
   arrange(nommpio) %>% 
   View()
 
@@ -436,6 +439,33 @@ covid_transformado %>%
   View()
 
 
-## COMANDOS PARA CONOCER LOS NOMBRES Y EL TIPO DE LAS COLUMNAS
+## ------ COMANDOS PARA CONOCER LOS NOMBRES Y EL TIPO DE LAS COLUMNAS ------
 glimpse(covid_transformado)
 glimpse(covid_original)
+
+
+
+###  ---------                                                         ---------------
+###  --------- TRANSFORMACON DEL ARCHIVO DISTRIBUCION VACUNAS ORIGINAL ---------------
+###  ---------                                                         ---------------
+
+
+# Creacion del archivo distribucion vacunas transformado
+dist_vacunas_transformado <- dist_vacunas_original
+
+# Actualizar los nombres de las columnas
+dist_vacunas_transformado <- dist_vacunas_transformado %>% 
+  rename(codres = "Num_Resolucion", fresol = "Fecha_Resolucion", año = "Año", coddpto = "Cod_Territorio",
+         nomdpto = "Nom_Territorio", laboratorio = "Laboratorio_Vacuna", dosis = "Cantidad", uso = "Uso_vacuna",
+         fcorte = "fecha_corte")
+
+# Creacion de columnas mes y nrosemana
+dist_vacunas_transformado <- dist_vacunas_transformado %>% 
+  mutate(nrosem = isoweek(fresol)) %>% 
+  mutate(mes = month(fresol, label =TRUE))
+
+
+
+
+## ------ COMANDOS PARA CONOCER LOS NOMBRES Y EL TIPO DE LAS COLUMNAS ------
+glimpse(dist_vacunas_original)
