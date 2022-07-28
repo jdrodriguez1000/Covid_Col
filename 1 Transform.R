@@ -465,7 +465,165 @@ dist_vacunas_transformado <- dist_vacunas_transformado %>%
   mutate(mes = month(fresol, label =TRUE))
 
 
+## ----- ANALISIS INICIAL DE LA VARIABLE CODIGO DE LA RESOLUCION -------
+
+# Total registros en la variable
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(codres))) %>% 
+  View()
+
+# Agrupacion de registros por la variable codigo de la resolucion
+dist_vacunas_transformado %>% 
+  group_by(codres) %>% 
+  summarise(total = sum(!is.na(codres))) %>% 
+  View()
+
+# Valores minimas y maximas de codigo de resolucion
+dist_vacunas_transformado %>% 
+  summarise(codigo_minimo = min(codres),
+            codigo_maximo = max(codres)) %>% 
+  View()
+
+
+#  -------- ANALISIS INICIAL DE LA VARIABLE FECHA DE RESOLUCION -----
+
+# Total registros informados par la variable
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(fresol))) %>% 
+  View()
+
+# Fechas maxima y minima registradas
+dist_vacunas_transformado %>% 
+  summarise(fecha_minima = min(fresol),
+            fecha_maxima = max(fresol)) %>% 
+  View()
+
+
+# ------- ANALISIS INIICSL DE LA VARIABLE AÑO --------
+
+# Total  registros informados
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(año))) %>% 
+  View()
+
+# Registros informados en la variable año
+dist_vacunas_transformado %>% 
+  group_by(año) %>% 
+  summarise(total = sum(!is.na(año))) %>% 
+  View()
+
+
+#  -------- ANALISIS INICIAL DE LAS VARIABLES CODIGOS Y NOMBRES DE DEPARTAMENTO -------
+
+# Registros totales en la variable codigo de departamento
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(coddpto))) %>% 
+  View()
+
+# Registros totales en la variable nombre de departamento
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(nomdpto))) %>% 
+  View()
+
+# Registro de codigos y nombres incorrectos o repetidos
+dist_vacunas_transformado %>% 
+  group_by(coddpto, nomdpto) %>% 
+  summarise(total = sum(!is.na(nomdpto))) %>% 
+  arrange(nomdpto) %>% 
+  View()
+
+# Se debe transformar la siguientes nombres de departamentos: Barranquilla a Atlantico, Bogota DC a Bogota,
+# Buenaventura a Valle, Cali a Valle, Cartagena a Bolivar, La Guajira a Guajira, San Andres, Providencia y
+# Santa Catalina a San Andres, Santa Martha y Santa Marta a Magadalena, Valle del cauca a Valle
+dist_vacunas_transformado <- dist_vacunas_transformado %>% 
+  mutate(nomdpto = ifelse(nomdpto == "BARRANQUILLA", "ATLANTICO", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "BOGOTA D.C.", "BOGOTA", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "BUENAVENTURA", "VALLE", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "CALI", "VALLE", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "CARTAGENA", "BOLIVAR", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "LA_GUAJIRA", "GUAJIRA", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "SAN ANDRES, PROVIDENCIA Y SANTA CATALINA", "SAN ANDRES", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "SANTA MARTA", "MAGDALENA", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "SANTA MARTHA", "MAGDALENA", nomdpto )) %>% 
+  mutate(nomdpto = ifelse(nomdpto == "VALLE_DEL_CAUCA", "VALLE", nomdpto ))
+
+  
+# Se debe actualizar los siguientes codigos de departamentos: Atlantico, Bolivar, Magdalena, Valle
+dist_vacunas_transformado <- dist_vacunas_transformado %>% 
+  mutate(coddpto = ifelse(coddpto == 8001, 8, coddpto)) %>% 
+  mutate(coddpto = ifelse(coddpto == 13001, 13, coddpto)) %>% 
+  mutate(coddpto = ifelse(coddpto == 47001, 47, coddpto)) %>% 
+  mutate(coddpto = ifelse(coddpto == 76001, 76, coddpto)) %>% 
+  mutate(coddpto = ifelse(coddpto == 76109, 76, coddpto)) 
+
+
+# ------- ANALISIS DE LA VARIABLE LABORATORIO -------
+
+# Total registros en la variable laboratorio
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(laboratorio))) %>% 
+  View()
+
+# Informacion almacenada en la variable 
+dist_vacunas_transformado %>% 
+  group_by(laboratorio) %>% 
+  summarise(total = sum(!is.na(laboratorio))) %>% 
+  View()
+
+# Se debe actualizar el nombre del laboratorio AZTRAZENECA por ASTRAZENECA
+dist_vacunas_transformado <- dist_vacunas_transformado %>% 
+  mutate(laboratorio = ifelse(laboratorio == "AZTRAZENECA", "ASTRAZENECA", laboratorio))
+
+
+# ---------- ANALISIS DE LA VARIABLE DOSIS ---------
+
+# Total de registros informados en la variable dosis
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(dosis))) %>% 
+  View()
+
+# Numero de dosis por laboratorio
+dist_vacunas_transformado %>% 
+  group_by(laboratorio) %>% 
+  summarise(total = sum(!is.na(dosis))) %>% 
+  View()
+
+
+# -------- ANALISIS DE LA VARIABLE USO ---------
+
+# Total registros con informacion en la variable uso
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(uso))) %>% 
+  View()
+
+# Total registros sin informacion en la variable uso
+dist_vacunas_transformado %>% 
+  summarise(total = sum(is.na(uso))) %>% 
+  View()
+
+# Informacion almacenada en la variable uso
+dist_vacunas_transformado %>% 
+  group_by(uso) %>% 
+  summarise(total = sum(!is.na(uso))) %>% 
+  View()
+
+
+# -------- ANALISIS DE LA VARIABLE FECHA DE CORTE ---------
+
+# Total registros informados
+dist_vacunas_transformado %>% 
+  summarise(total = sum(!is.na(fcorte))) %>% 
+  View()
+
+# Fecha minima y maxima
+dist_vacunas_transformado %>% 
+  summarise(fecha_minima = min(fcorte),
+            fecha_maxima = max(fcorte)) %>% 
+  View()
+
 
 
 ## ------ COMANDOS PARA CONOCER LOS NOMBRES Y EL TIPO DE LAS COLUMNAS ------
+glimpse(dist_vacunas_transformado)
 glimpse(dist_vacunas_original)
+
