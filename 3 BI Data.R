@@ -199,6 +199,11 @@ muertes_año_dpto <- dtf_casos %>%
   mutate(casos_acum = cumsum(total))
   colnames(muertes_año_dpto) <- c("Codigo", "Departamento", "Año", "Fallecimientos", "Muertes_acumuladas")
   
-# Número de muertes por semana y por departamento
+# Número de casos reportados por edad
+casos_edad <- dtf_casos %>% 
+  group_by(edad) %>% 
+  summarise(total = sum(!is.na(edad))) %>% 
+  ungroup() 
+  colnames(casos_edad) <- c("Edad", "Casos reportados")
 
 
