@@ -181,6 +181,23 @@ ggplot(muertes_mes, aes(año_mes, Fallecimientos)) +
   geom_text(aes(label = Fallecimientos, vjust= 1.5, hjust=0.5), size =3)
 
 
+# Número de casos por rangos de edad
+ggplot(dtf_casos, aes(edad)) +
+  geom_histogram(bins = 20, alpha=0.5, color = "#AEB6BF", fill="#D7BDE2") +
+  theme_bw() +
+  labs(title = "Histograma de casos reportados por edad",
+       x = "Edad",
+       y = "Casos",
+       caption = "INS Colombia") 
 
 
+# Histograma de casos por mes
+ggplot(dtf_casos, aes(fnotif)) +
+  geom_histogram(bins = 30, alpha=0.5, color = "#AEB6BF", fill="#D7BDE2") +
+  theme_bw() +
+  labs(title = "Histograma de casos reportados por fecha",
+       x = "Fecha",
+       y = "Casos",
+       caption = "INS Colombia") +
+  theme(axis.text.x = element_text(angle = 90, size = 6))
   
