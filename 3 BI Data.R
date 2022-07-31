@@ -5,6 +5,13 @@ library(dplyr)
 library(ggplot2)
 library(tidyverse)
 
+# numero de casos por fecha de reporte
+casos_por_reporte <- dtf_casos %>% 
+  group_by(frepor) %>% 
+  summarise(total_casos = sum(!is.na(frepor))) %>% 
+  arrange(desc(frepor))
+
+
 # Informacion general 
 general <- dtf_casos %>% 
   summarise(fecha_reporte = max(frepor, na.rm = TRUE),
@@ -19,12 +26,6 @@ general <- dtf_casos %>%
 casos_nuevos <- dtf_casos %>% 
   filter(frepor == max(frepor)) %>% 
   summarise(casos_nuevos = sum(!is.na(frepor)))
-
-# numero de casos por fecha de reporte
-casos_por_reporte <- dtf_casos %>% 
-  group_by(frepor) %>% 
-  summarise(total_casos = sum(!is.na(frepor))) %>% 
-  arrange(desc(frepor)) 
 
   
 # Numero de casos por año y acumulados
@@ -97,8 +98,9 @@ casos_nuevos_esp_dpto <- dtf_casos %>%
 # Casos totales por año por departamento
 casos_año_dpto <- dtf_casos %>% 
   group_by(coddpto, nomdpto, year(fnotif)) %>% 
-  summarise(total_casos = sum(!is.na(idcaso)),
-            casos_acum = sum(total_casos)) 
+  summarise(total_casos = sum(!is.na(idcaso))) %>% 
+  ungroup() %>% 
+  mutate(acumulados = cumsum(total_casos))
 colnames(casos_año_dpto) <- c("Codigo", "Departamento", "Año", "Casos_reportados", "Casos_acumulados")
 
 
@@ -166,14 +168,6 @@ muertes_mes <- dtf_casos %>%
 colnames(muertes_mes) <- c("Año", "Mes", "Fallecimientos", "Muertes_acumuladas")
 muertes_mes <- (unite(muertes_mes, año_mes, Año, Mes, sep = "-"))
 
-
-muertes_mes <- dtf_casos %>% 
-  filter(estado == "Fallecido") %>% 
-  group_by(ym(fnotif)) %>% 
-
-
-glimpse(muertes_mes)
-
   
 # Número de muertes por semana
 muertes_semana <- dtf_casos %>% 
@@ -183,9 +177,8 @@ muertes_semana <- dtf_casos %>%
     ungroup() %>% 
     mutate(acumulados = cumsum(total))
   colnames(muertes_semana) <- c("Año", "Nro_semana", "Fallecimientos", "Muertes_acumuladas")
-muertes_semana <- unite(muertes_semana, año_semana, Nro_semana, Año, sep = "_")
+muertes_semana <- unite(muertes_semana, año_semana, Año, Nro_semana, sep = "_")
 
-glimpse(muertes_semana)
   
 # Número de muertes diarias
 muertes_dia <- dtf_casos %>% 
@@ -195,6 +188,7 @@ muertes_dia <- dtf_casos %>%
   ungroup() %>% 
   mutate(acumulados = cumsum(total))
 colnames(muertes_dia) <- c("Fecha", "Fallecimientos", "Muertes_acumuladas")
+
   
 # Numero de muertos por año y por departamento
 muertes_año_dpto <- dtf_casos %>% 
@@ -208,6 +202,3 @@ muertes_año_dpto <- dtf_casos %>%
 # Número de muertes por semana y por departamento
 
 
-
-
-glimpse(dtf_casos)
