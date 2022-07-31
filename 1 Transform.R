@@ -343,8 +343,13 @@ covid_transformado %>%
 # analisis de la fecha de sintomas cuando tiene datos faltantes
 covid_transformado %>% 
   filter(is.na(fsintomas)) %>% 
+  summarise(total = sum(is.na(fsintomas))) %>% 
   View()
 
+# Datos faltantes en la variablbe fecha de sintomas
+covid_transformado %>% 
+  filter(is.na(fsintomas)) %>% 
+  View()
 
 ## ----- ANALISIS INICIAL DE LA VARIABLE FECHA DE MUERTE ------
 
