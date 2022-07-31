@@ -26,29 +26,6 @@ ggplot(casos_por_año, aes(año, casos_acumulados)) +
   geom_text(aes(label = casos_acumulados, vjust= 1.5, hjust=0.5))
 
 
-# Gráfico total casos por departamento
-ggplot(casos_año_dpto, aes(Departamento, Casos_acumulados)) +
-  geom_col(fill = "#BB8FCE") +
-  theme_classic() +
-  coord_cartesian(ylim = c(0, 2000000), expand = TRUE)+
-  theme(axis.text.x = element_text(angle = 90, size = 6)) +
-  labs(title = "Casos totales por departamento",
-       x= "Departamentos",
-       y ="Numero de casos",
-       caption = "INS Colombia") 
-
-#Grafico total de casos reportados por departamento y año
-ggplot(casos_año_dpto) +
-  geom_col(mapping = aes(x=Departamento, y=Casos_acumulados, fill= Año)) +
-  theme_classic() +
-  coord_cartesian(ylim = c(0, 1900000), expand = TRUE)+
-  theme(axis.text.x = element_text(angle = 90, size = 7)) +
-  theme(axis.text.y = element_text(size = 6)) +
-  labs(title = "Casos totales por departamento",
-       x= "Departamentos",
-       y ="Numero de casos",
-       caption = "INS Colombia") 
-
 # Grafico de casos totales por dia
 ggplot(casos_dia, aes(Fecha, Casos_totales)) +
   geom_line(color = "#6C3483") + 
@@ -71,6 +48,31 @@ ggplot(casos_dia, aes(Fecha, Casos_acumulados)) +
        caption = "INS Colombia") +
   theme(axis.text.x = element_text(angle = 90, size = 7)) +
   theme(axis.text.y = element_text(size = 7)) 
+
+
+# Gráfico total casos por departamento
+ggplot(casos_año_dpto, aes(Departamento, Casos_reportados)) +
+  geom_col(fill = "#BB8FCE") +
+  theme_classic() +
+  coord_cartesian(ylim = c(0, 2000000), expand = TRUE)+
+  theme(axis.text.x = element_text(angle = 90, size = 6)) +
+  labs(title = "Casos totales por departamento",
+       x= "Departamentos",
+       y ="Numero de casos",
+       caption = "INS Colombia") 
+
+#Grafico total de casos reportados por departamento y año
+ggplot(casos_año_dpto) +
+  geom_col(mapping = aes(x=Departamento, y=Casos_reportados, fill= Año)) +
+  theme_classic() +
+  coord_cartesian(ylim = c(0, 1900000), expand = TRUE)+
+  theme(axis.text.x = element_text(angle = 90, size = 7)) +
+  theme(axis.text.y = element_text(size = 6)) +
+  labs(title = "Casos totales por departamento",
+       x= "Departamentos",
+       y ="Numero de casos",
+       caption = "INS Colombia") 
+
 
 # Grafico de casos totales por dia para un departamento
 ggplot(casos_dia_dpto, aes(Fecha_notificacion, Total_casos)) +
