@@ -210,4 +210,14 @@ ggplot(dtf_casos, aes(sexo, edad, color = sexo)) +
        x = " Sexo",
        y = "Edad",
        caption = "INS Colombia")
+
+# Grafico de vioin
+ggplot(dtf_casos, aes(sexo, edad, color = sexo)) +
+  geom_violin() + 
+  geom_boxplot(width = 0.4, alpha = 0.5) +
+  theme_bw() +
+  labs(title = "Comportamiento de contagios por sexo y edad",
+       x = " Sexo",
+       y = "Edad",
+       caption = "INS Colombia")
   
