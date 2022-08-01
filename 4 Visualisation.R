@@ -200,4 +200,14 @@ ggplot(dtf_casos, aes(fnotif)) +
        y = "Casos",
        caption = "INS Colombia") +
   theme(axis.text.x = element_text(angle = 90, size = 6))
+
+
+# Grafico de boxplot
+ggplot(dtf_casos, aes(sexo, edad, color = sexo)) +
+  geom_boxplot() + 
+  theme_bw() +
+  labs(title = "Comportamiento de contagios por sexo y edad",
+       x = " Sexo",
+       y = "Edad",
+       caption = "INS Colombia")
   
