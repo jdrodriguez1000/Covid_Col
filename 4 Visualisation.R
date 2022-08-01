@@ -209,9 +209,11 @@ ggplot(dtf_casos, aes(sexo, edad, color = sexo)) +
   labs(title = "Comportamiento de contagios por sexo y edad",
        x = " Sexo",
        y = "Edad",
-       caption = "INS Colombia")
+       caption = "INS Colombia")+
+  
 
-# Grafico de vioin
+
+# Grafico de violin
 ggplot(dtf_casos, aes(sexo, edad, color = sexo)) +
   geom_violin() + 
   geom_boxplot(width = 0.4, alpha = 0.5) +
@@ -220,4 +222,15 @@ ggplot(dtf_casos, aes(sexo, edad, color = sexo)) +
        x = " Sexo",
        y = "Edad",
        caption = "INS Colombia")
+
+# Ajuste a un grafico de boxplot
+ggplot(dtf_casos, aes(sexo, edad, fill=sexo)) +
+  geom_boxplot(alpha = 0.5,
+               outlier.color = "red", outlier.shape = 10, outlier.size = 0.5) +
+  stat_summary(fun.y = mean, geom = "point", shape = 20, size = 10, color ="yellow") +
+  theme_bw() +
+  theme(legend.position = "none") +
+  scale_fill_brewer(palette = "Dark2") +
+  stat_boxplot(geom = "errorbar", width = 0.25, alpha = 0.5)
+  
   
